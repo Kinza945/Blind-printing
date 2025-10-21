@@ -1,10 +1,10 @@
 package com.example.demo.components;
 
-import com.example.demo.LayoutController;
-import com.example.demo.activity.BlindPrintingController;
+import com.example.demo.activity.MainActivityController;
 import com.example.demo.view.HomeViewController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,22 +15,12 @@ public class MenuController {
     @FXML private Button award;
     @FXML private Button settings;
 
-    private LayoutController layoutController;
+    private MainActivityController activityController;
     private List<Button> buttonList;
 
-
-    //Передача ссылки для использования методов данного Layout
-    public void setLayoutController(LayoutController layoutController) {
-        this.layoutController = layoutController;
-        // Загружаем домашнюю страницу с передачей ссылки
-        HomeViewController homeController =
-                this.layoutController.loadContentPaneWithController("view/home_view.fxml", HomeViewController.class);
-        if (homeController != null) {
-            homeController.setLayoutController(this.layoutController);
-        }
+    public void setActivityController(MainActivityController activityController) {
+        this.activityController = activityController;
     }
-
-
 
     @FXML
     private void initialize() {
@@ -38,50 +28,30 @@ public class MenuController {
 
         buttonList = Arrays.asList(home, progress, info, award, settings);
 
-        home.setOnAction(e -> {
-            if (layoutController != null) {
-                HomeViewController homeController =
-                        layoutController.loadContentPaneWithController("view/home_view.fxml", HomeViewController.class);
-                if (homeController != null) {
-                    homeController.setLayoutController(layoutController);
-                }
-                setActiveButton(home);
-            }
-        });
-
-
-        progress.setOnAction(e -> {
-            if (layoutController != null) {
-                layoutController.loadContentPane("view/progress_view.fxml");
-                setActiveButton(progress);
-            }
-        });
-
-        info.setOnAction(e -> {
-            if (layoutController != null) {
-                layoutController.loadContentPane("view/info_view.fxml");
-                setActiveButton(info);
-            }
-        });
-
-        award.setOnAction(e -> {
-            if (layoutController != null) {
-                layoutController.loadContentPane("view/award_view.fxml");
-                setActiveButton(award);
-            }
-        });
-
-        settings.setOnAction(e -> {
-            if (layoutController != null) {
-                layoutController.loadContentPane("view/settings_view.fxml");
-                setActiveButton(settings);
-            }
-        });
-
-        // Устанавливаем активную кнопку "home" по умолчанию
-        setActiveButton(home);
+        home.setOnAction(e -> openHome());
+        progress.setOnAction(e -> openContent("view/progress_view.fxml", progress));
+        info.setOnAction(e -> openContent("view/info_view.fxml", info));
+        award.setOnAction(e -> openContent("view/award_view.fxml", award));
+        settings.setOnAction(e -> openContent("view/settings_view.fxml", settings));
     }
 
+    public void showHome() {
+        openHome();
+    }
+
+    private void openHome() {
+        if (activityController != null) {
+            activityController.loadContentWithController("view/home_view.fxml", HomeViewController.class);
+            setActiveButton(home);
+        }
+    }
+
+    private void openContent(String fxmlPath, Button button) {
+        if (activityController != null) {
+            activityController.loadContent(fxmlPath);
+            setActiveButton(button);
+        }
+    }
 
     private void setActiveButton(Button activeBtn) {
         for (Button btn : buttonList) {
@@ -90,5 +60,4 @@ public class MenuController {
         activeBtn.getStyleClass().add("active-button-menu");
         System.out.println("Нажата кнопка меню: " + activeBtn.getId());
     }
-
 }
