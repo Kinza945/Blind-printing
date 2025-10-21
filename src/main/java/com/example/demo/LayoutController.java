@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class LayoutController {
 
@@ -20,7 +21,7 @@ public class LayoutController {
 
     public <T> T loadScene(String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(resolveResource(fxmlPath));
             Node pane = loader.load();
             attachToScene(pane);
 
@@ -36,6 +37,13 @@ public class LayoutController {
             System.err.println("Ошибка загрузки сцены: " + fxmlPath);
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private URL resolveResource(String fxmlPath) {
+        URL resource = getClass().getResource("/com/example/demo/" + fxmlPath);
+        if (resource == null) {
+            throw new IllegalArgumentException("Ресурс не найден: " + fxmlPath);
         }
         return resource;
     }

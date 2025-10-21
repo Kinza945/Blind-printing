@@ -5,11 +5,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="rootPane"
@@ -18,63 +17,73 @@
             fx:controller="com.example.demo.activity.BlindPrintingController"
             stylesheets="@../css/view_progress.css"
             styleClass="progress-view-style">
+    <BorderPane AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0">
+        <top>
+            <HBox alignment="CENTER_LEFT" spacing="10" maxWidth="800" BorderPane.alignment="CENTER">
+                <padding>
+                    <Insets top="20" right="20" bottom="0" left="20"/>
+                </padding>
+                <Button fx:id="backButton" text="← Назад" styleClass="back-button"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="resetButton" text="Сброс" styleClass="control-button"/>
+                <Button fx:id="startButton" text="Начать" styleClass="control-button"/>
+            </HBox>
+        </top>
+        <center>
+            <VBox alignment="TOP_CENTER" spacing="20" BorderPane.alignment="CENTER">
+                <padding>
+                    <Insets top="10" right="20" bottom="0" left="20"/>
+                </padding>
 
-    <VBox AnchorPane.topAnchor="0.0"
-          AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0"
-          alignment="TOP_CENTER"
-          spacing="20">
-        <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
-        </padding>
+                <VBox spacing="10" maxWidth="800">
+                    <Label text="Текст для набора" styleClass="text-style"/>
+                    <TextArea fx:id="targetTextArea"
+                              editable="false"
+                              focusTraversable="false"
+                              wrapText="true"
+                              prefRowCount="3"/>
+                </VBox>
 
-        <HBox alignment="CENTER_LEFT" spacing="10" maxWidth="800">
-            <Button fx:id="backButton" text="← Назад" styleClass="back-button"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="resetButton" text="Сброс" styleClass="control-button"/>
-            <Button fx:id="startButton" text="Начать" styleClass="control-button"/>
-        </HBox>
+                <GridPane hgap="30" vgap="10" maxWidth="800">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33"/>
+                        <ColumnConstraints percentWidth="33"/>
+                        <ColumnConstraints percentWidth="34"/>
+                    </columnConstraints>
 
-        <VBox spacing="10" maxWidth="800">
-            <Label text="Текст для набора" styleClass="text-style"/>
-            <TextArea fx:id="targetTextArea"
-                      editable="false"
-                      focusTraversable="false"
-                      wrapText="true"
-                      prefRowCount="3"/>
+                    <Label text="Время" styleClass="text-style" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
+                    <Label fx:id="timerLabel" text="00:00" styleClass="stat-value" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
 
-            <Label text="Ваш ввод" styleClass="text-style"/>
-            <TextArea fx:id="inputArea"
-                      promptText="Нажмите &quot;Начать&quot;, чтобы разблокировать поле ввода"
-                      wrapText="true"
-                      prefRowCount="6"/>
-        </VBox>
+                    <Label text="Скорость" styleClass="text-style" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
+                    <Label fx:id="wpmLabel" text="0.0 WPM" styleClass="stat-value" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
 
-        <GridPane hgap="30" vgap="10" maxWidth="800">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="33"/>
-                <ColumnConstraints percentWidth="33"/>
-                <ColumnConstraints percentWidth="34"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="40"/>
-            </rowConstraints>
+                    <Label text="Точность" styleClass="text-style" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
+                    <Label fx:id="accuracyLabel" text="0.0% точность" styleClass="stat-value" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
+                </GridPane>
 
-            <Label text="Время" styleClass="text-style" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
-            <Label fx:id="timerLabel" text="00:00" styleClass="stat-value" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
+                <Label fx:id="statusLabel"
+                       text="Нажмите &quot;Начать&quot;, чтобы приступить к тренировке слепой печати."
+                       wrapText="true"
+                       styleClass="text-style"
+                       maxWidth="800"/>
 
-            <Label text="Скорость" styleClass="text-style" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
-            <Label fx:id="wpmLabel" text="0.0 WPM" styleClass="stat-value" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
-
-            <Label text="Точность" styleClass="text-style" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
-            <Label fx:id="accuracyLabel" text="0.0% точность" styleClass="stat-value" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
-        </GridPane>
-
-        <Label fx:id="statusLabel"
-               text="Нажмите &quot;Начать&quot;, чтобы приступить к тренировке слепой печати."
-               wrapText="true"
-               styleClass="text-style"
-               maxWidth="800"/>
-    </VBox>
+                <Region VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </center>
+        <bottom>
+            <VBox spacing="10" maxWidth="800" BorderPane.alignment="CENTER">
+                <padding>
+                    <Insets top="0" right="20" bottom="20" left="20"/>
+                </padding>
+                <Label text="Ваш ввод" styleClass="text-style"/>
+                <TextArea fx:id="inputArea"
+                          promptText="Нажмите &quot;Начать&quot;, чтобы разблокировать поле ввода"
+                          wrapText="true"
+                          prefRowCount="6"/>
+            </VBox>
+        </bottom>
+    </BorderPane>
 </AnchorPane>

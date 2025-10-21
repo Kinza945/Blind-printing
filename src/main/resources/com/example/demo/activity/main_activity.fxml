@@ -11,16 +11,10 @@
                 AnchorPane.topAnchor="0.0"
                 AnchorPane.bottomAnchor="0.0"/>
 
-    <AnchorPane AnchorPane.leftAnchor="60.0"
+    <AnchorPane fx:id="contentPane"
+                AnchorPane.leftAnchor="60.0"
                 AnchorPane.rightAnchor="0.0"
                 AnchorPane.topAnchor="0.0"
-                AnchorPane.bottomAnchor="0.0">
-
-        <AnchorPane fx:id="contentPane"
-                    AnchorPane.leftAnchor="60.0"
-                    AnchorPane.rightAnchor="60.0"
-                    AnchorPane.topAnchor="30.0"
-                    AnchorPane.bottomAnchor="0.0"/>
-    </AnchorPane>
+                AnchorPane.bottomAnchor="0.0"/>
 
 </AnchorPane>
