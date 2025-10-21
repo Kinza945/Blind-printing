@@ -70,7 +70,37 @@ public class BlindPrintingController implements LayoutAware {
 
     @FXML
     private void initialize() {
-        System.out.println("Инициализация BlindPrintingController");
+        inputArea.setDisable(true);
+        inputArea.textProperty().addListener((obs, oldText, newText) -> {
+            if (!running) {
+                return;
+            }
+
+            updateMetrics();
+            if (activeLesson != null && newText.length() >= activeLesson.length()) {
+                finishTest();
+            }
+        });
+
+        inputArea.setDisable(true);
+        inputArea.textProperty().addListener((obs, oldText, newText) -> {
+            if (running) {
+                updateMetrics();
+                if (activeLesson != null && newText.length() >= activeLesson.length()) {
+                    finishTest();
+                }
+            }
+        });
+
+        inputArea.setDisable(true);
+        inputArea.textProperty().addListener((obs, oldText, newText) -> {
+            if (running) {
+                updateMetrics();
+                if (activeLesson != null && newText.length() >= activeLesson.length()) {
+                    finishTest();
+                }
+            }
+        });
 
         inputArea.setDisable(true);
         inputArea.textProperty().addListener((obs, oldText, newText) -> {
