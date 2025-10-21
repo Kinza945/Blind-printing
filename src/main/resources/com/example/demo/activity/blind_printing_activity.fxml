@@ -19,6 +19,26 @@
             fx:controller="com.example.demo.activity.BlindPrintingController"
             stylesheets="@../css/view_progress.css"
             styleClass="progress-view-style">
+    <BorderPane AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0">
+        <top>
+            <HBox alignment="CENTER_LEFT" spacing="10" maxWidth="800" BorderPane.alignment="CENTER">
+                <padding>
+                    <Insets top="20" right="20" bottom="0" left="20"/>
+                </padding>
+                <Button fx:id="backButton" text="← Назад" styleClass="back-button"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="resetButton" text="Сброс" styleClass="control-button"/>
+                <Button fx:id="startButton" text="Начать" styleClass="control-button"/>
+            </HBox>
+        </top>
+        <center>
+            <VBox alignment="TOP_CENTER" spacing="20" BorderPane.alignment="CENTER">
+                <padding>
+                    <Insets top="10" right="20" bottom="0" left="20"/>
+                </padding>
 
     <BorderPane AnchorPane.topAnchor="0.0"
                 AnchorPane.bottomAnchor="0.0"
