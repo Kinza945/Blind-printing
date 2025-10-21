@@ -1,7 +1,7 @@
 package com.example.demo.view;
 
+import com.example.demo.LayoutAware;
 import com.example.demo.LayoutController;
-import com.example.demo.activity.BlindPrintingController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -9,15 +9,14 @@ import javafx.scene.layout.TilePane;
 
 import java.io.IOException;
 
-
-public class HomeViewController {
+public class HomeViewController implements LayoutAware {
 
     @FXML
     private TilePane basicLessons;
 
     private LayoutController layoutController;
 
-    // метод для передачи ссылки извне
+    @Override
     public void setLayoutController(LayoutController layoutController) {
         this.layoutController = layoutController;
     }
@@ -37,14 +36,9 @@ public class HomeViewController {
                 pane.setOnMouseClicked(mouseEvent -> {
                     System.out.println("Нажата карточка: " + pane.getId());
                     if (layoutController != null) {
-                        layoutController.loadActivityWithController(
-                                "activity/blind_printing_activity.fxml",
-                                BlindPrintingController.class
-                        );
+                        layoutController.loadScene("activity/blind_printing_activity.fxml");
                     }
                 });
-
-
 
                 basicLessons.getChildren().add(pane);
             } catch (IOException e) {
