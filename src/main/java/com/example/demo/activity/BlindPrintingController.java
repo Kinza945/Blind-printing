@@ -83,6 +83,16 @@ public class BlindPrintingController implements LayoutAware {
             }
         });
 
+        inputArea.setDisable(true);
+        inputArea.textProperty().addListener((obs, oldText, newText) -> {
+            if (running) {
+                updateMetrics();
+                if (activeLesson != null && newText.length() >= activeLesson.length()) {
+                    finishTest();
+                }
+            }
+        });
+
         if (backButton != null) {
             backButton.setOnAction(e -> goBackToHome());
         }
