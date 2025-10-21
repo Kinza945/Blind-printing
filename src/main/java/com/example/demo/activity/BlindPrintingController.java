@@ -2,19 +2,12 @@ package com.example.demo.activity;
 
 import com.example.demo.LayoutAware;
 import com.example.demo.LayoutController;
-import com.example.demo.databases.DBUserResults;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 public class BlindPrintingController implements LayoutAware {
 
@@ -23,30 +16,6 @@ public class BlindPrintingController implements LayoutAware {
 
     @FXML
     private Button backButton;
-
-    @FXML
-    private Button startButton;
-
-    @FXML
-    private Button resetButton;
-
-    @FXML
-    private TextArea targetTextArea;
-
-    @FXML
-    private TextArea inputArea;
-
-    @FXML
-    private Label timerLabel;
-
-    @FXML
-    private Label wpmLabel;
-
-    @FXML
-    private Label accuracyLabel;
-
-    @FXML
-    private Label statusLabel;
 
     private LayoutController layoutController;
     private final Random random = new Random();
@@ -57,11 +26,6 @@ public class BlindPrintingController implements LayoutAware {
             "Тренируйтесь печатать без подсказок чтобы улучшить скорость",
             "Регулярные упражнения помогают мозгу запоминать расположение клавиш"
     );
-
-    private String activeLesson;
-    private long startNanoTime;
-    private Timeline timeline;
-    private boolean running;
 
     @Override
     public void setLayoutController(LayoutController layoutController) {
@@ -181,57 +145,5 @@ public class BlindPrintingController implements LayoutAware {
         if (layoutController != null) {
             layoutController.loadScene(fxmlPath);
         }
-    }
-
-    private void updateMetrics() {
-        double elapsedSeconds = getElapsedSeconds();
-        timerLabel.setText(formatElapsed(elapsedSeconds));
-
-        String typed = inputArea.getText();
-        int charactersTyped = typed.length();
-        double minutes = elapsedSeconds / 60.0;
-        double wpm = minutes > 0 ? (charactersTyped / 5.0) / minutes : 0.0;
-        wpmLabel.setText(String.format("%.1f WPM", wpm));
-
-        if (activeLesson != null && !activeLesson.isEmpty()) {
-            int matched = 0;
-            int maxLength = Math.min(typed.length(), activeLesson.length());
-            for (int i = 0; i < maxLength; i++) {
-                if (typed.charAt(i) == activeLesson.charAt(i)) {
-                    matched++;
-                }
-            }
-            int total = Math.max(activeLesson.length(), typed.length());
-            double accuracy = total > 0 ? (double) matched / total : 0.0;
-            accuracyLabel.setText(String.format("%.1f%% точность", accuracy * 100));
-        } else {
-            accuracyLabel.setText("0.0% точность");
-        }
-    }
-
-    private double getElapsedSeconds() {
-        if (!running) {
-            return startNanoTime > 0 ? (System.nanoTime() - startNanoTime) / 1_000_000_000.0 : 0.0;
-        }
-        return (System.nanoTime() - startNanoTime) / 1_000_000_000.0;
-    }
-
-    private String formatElapsed(double elapsedSeconds) {
-        long totalSeconds = (long) elapsedSeconds;
-        long minutes = totalSeconds / 60;
-        long seconds = totalSeconds % 60;
-        return String.format("%02d:%02d", minutes, seconds);
-    }
-
-    private double parseLabelValue(String text) {
-        if (text == null || text.isEmpty()) {
-            return 0.0;
-        }
-        String numeric = text.replaceAll("[^0-9.,]", "").replace(',', '.');
-        return numeric.isEmpty() ? 0.0 : Double.parseDouble(numeric);
-    }
-
-    private double parsePercentageValue(String text) {
-        return parseLabelValue(text) / 100.0;
     }
 }

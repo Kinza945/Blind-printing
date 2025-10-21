@@ -51,7 +51,7 @@ public class MainActivityController implements LayoutAware {
         try {
             FXMLLoader loader = new FXMLLoader(resolveResource(fxmlPath));
             Node pane = loader.load();
-            attachToContainer(contentPane, pane);
+            attachToContent(pane);
 
             Object controller = loader.getController();
             if (controller instanceof LayoutAware && layoutController != null) {
@@ -73,7 +73,11 @@ public class MainActivityController implements LayoutAware {
         try {
             FXMLLoader loader = new FXMLLoader(resolveResource(fxmlPath));
             VBox pane = loader.load();
-            attachToContainer(menuPane, pane);
+            menuPane.getChildren().setAll(pane);
+            AnchorPane.setTopAnchor(pane, 0.0);
+            AnchorPane.setBottomAnchor(pane, 0.0);
+            AnchorPane.setLeftAnchor(pane, 0.0);
+            AnchorPane.setRightAnchor(pane, 0.0);
             return loader.getController();
         } catch (IOException e) {
             System.err.println("Ошибка загрузки меню: " + fxmlPath);
@@ -90,8 +94,8 @@ public class MainActivityController implements LayoutAware {
         return resource;
     }
 
-    private void attachToContainer(AnchorPane container, Node pane) {
-        container.getChildren().setAll(pane);
+    private void attachToContent(Node pane) {
+        contentPane.getChildren().setAll(pane);
         AnchorPane.setTopAnchor(pane, 0.0);
         AnchorPane.setBottomAnchor(pane, 0.0);
         AnchorPane.setLeftAnchor(pane, 0.0);
