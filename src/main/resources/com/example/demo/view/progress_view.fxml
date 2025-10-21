@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -12,7 +16,36 @@
           AnchorPane.leftAnchor="0.0"
           AnchorPane.topAnchor="0.0"
           AnchorPane.bottomAnchor="0.0"
-          alignment="CENTER">
-        <Text text="Progress view" styleClass="text-style"/>
+          alignment="TOP_CENTER"
+          spacing="20">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Статистика тренировок"
+               styleClass="text-style">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+        </Label>
+
+        <TableView fx:id="resultsTable"
+                   prefWidth="800"
+                   columnResizePolicy="CONSTRAINED_RESIZE_POLICY"
+                   VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="dateColumn" text="Дата"/>
+                <TableColumn fx:id="durationColumn" text="Время"/>
+                <TableColumn fx:id="wpmColumn" text="WPM"/>
+                <TableColumn fx:id="accuracyColumn" text="Точность"/>
+            </columns>
+        </TableView>
+
+        <Label fx:id="emptyLabel"
+               text="Результатов пока нет. Пройдите тренировку слепой печати, чтобы увидеть статистику."
+               wrapText="true"
+               styleClass="text-style"
+               visible="false"
+               maxWidth="800"/>
     </VBox>
 </AnchorPane>

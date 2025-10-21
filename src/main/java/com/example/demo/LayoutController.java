@@ -37,6 +37,7 @@ public class LayoutController {
             e.printStackTrace();
             return null;
         }
+        return resource;
     }
 
     private void attachToScene(Node pane) {
