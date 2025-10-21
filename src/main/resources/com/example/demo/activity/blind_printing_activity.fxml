@@ -6,9 +6,11 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="rootPane"
@@ -38,13 +40,35 @@
                     <Insets top="10" right="20" bottom="0" left="20"/>
                 </padding>
 
+    <BorderPane AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                prefWidth="900">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <top>
+            <VBox alignment="TOP_CENTER" spacing="20">
+                <HBox alignment="CENTER_LEFT" spacing="10" maxWidth="800">
+                    <Button fx:id="backButton" text="← Назад" styleClass="back-button"/>
+                    <Label text="Тренировка слепой печати"
+                           styleClass="text-style"
+                           maxWidth="1.7976931348623157E308"
+                           HBox.hgrow="ALWAYS"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="resetButton" text="Сброс" styleClass="control-button"/>
+                    <Button fx:id="startButton" text="Начать" styleClass="control-button"/>
+                </HBox>
+
                 <VBox spacing="10" maxWidth="800">
                     <Label text="Текст для набора" styleClass="text-style"/>
                     <TextArea fx:id="targetTextArea"
                               editable="false"
                               focusTraversable="false"
                               wrapText="true"
-                              prefRowCount="3"/>
+                              prefRowCount="4"/>
                 </VBox>
 
                 <GridPane hgap="30" vgap="10" maxWidth="800">
@@ -53,6 +77,10 @@
                         <ColumnConstraints percentWidth="33"/>
                         <ColumnConstraints percentWidth="34"/>
                     </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="40"/>
+                        <RowConstraints minHeight="40"/>
+                    </rowConstraints>
 
                     <Label text="Время" styleClass="text-style" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
                     <Label fx:id="timerLabel" text="00:00" styleClass="stat-value" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
@@ -63,26 +91,29 @@
                     <Label text="Точность" styleClass="text-style" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
                     <Label fx:id="accuracyLabel" text="0.0% точность" styleClass="stat-value" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.halignment="CENTER"/>
                 </GridPane>
+            </VBox>
+        </top>
 
+        <center>
+            <VBox alignment="CENTER" spacing="10">
                 <Label fx:id="statusLabel"
                        text="Нажмите &quot;Начать&quot;, чтобы приступить к тренировке слепой печати."
                        wrapText="true"
                        styleClass="text-style"
+                       textAlignment="CENTER"
                        maxWidth="800"/>
-
-                <Region VBox.vgrow="ALWAYS"/>
             </VBox>
         </center>
+
         <bottom>
-            <VBox spacing="10" maxWidth="800" BorderPane.alignment="CENTER">
-                <padding>
-                    <Insets top="0" right="20" bottom="20" left="20"/>
-                </padding>
+            <VBox spacing="10" maxWidth="800" alignment="TOP_CENTER" BorderPane.alignment="CENTER">
                 <Label text="Ваш ввод" styleClass="text-style"/>
                 <TextArea fx:id="inputArea"
                           promptText="Нажмите &quot;Начать&quot;, чтобы разблокировать поле ввода"
                           wrapText="true"
-                          prefRowCount="6"/>
+                          prefRowCount="6"
+                          prefWidth="800"
+                          maxWidth="1.7976931348623157E308"/>
             </VBox>
         </bottom>
     </BorderPane>

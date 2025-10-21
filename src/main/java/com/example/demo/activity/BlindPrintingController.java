@@ -59,9 +59,8 @@ public class BlindPrintingController implements LayoutAware {
     );
 
     private String activeLesson;
-    private Timeline timeline;
     private long startNanoTime;
-    private double completedSeconds;
+    private Timeline timeline;
     private boolean running;
 
     @Override
@@ -80,6 +79,16 @@ public class BlindPrintingController implements LayoutAware {
             updateMetrics();
             if (activeLesson != null && newText.length() >= activeLesson.length()) {
                 finishTest();
+            }
+        });
+
+        inputArea.setDisable(true);
+        inputArea.textProperty().addListener((obs, oldText, newText) -> {
+            if (running) {
+                updateMetrics();
+                if (activeLesson != null && newText.length() >= activeLesson.length()) {
+                    finishTest();
+                }
             }
         });
 
@@ -117,12 +126,16 @@ public class BlindPrintingController implements LayoutAware {
         inputArea.requestFocus();
 
         startNanoTime = System.nanoTime();
-        completedSeconds = 0.0;
         running = true;
         statusLabel.setText("Печатаем... Старайтесь не смотреть на клавиатуру!");
         startButton.setText("Завершить");
 
-        startMetricsTimeline();
+        if (timeline != null) {
+            timeline.stop();
+        }
+        timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), e -> updateMetrics()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
         updateMetrics();
     }
 
@@ -132,14 +145,15 @@ public class BlindPrintingController implements LayoutAware {
         }
 
         running = false;
-        completedSeconds = calculateElapsedSeconds();
-        stopMetricsTimeline();
-        updateMetrics();
+        if (timeline != null) {
+            timeline.stop();
+        }
 
+        updateMetrics();
         inputArea.setDisable(true);
         startButton.setText("Начать");
 
-        double elapsedSeconds = completedSeconds;
+        double elapsedSeconds = getElapsedSeconds();
         double wpm = parseLabelValue(wpmLabel.getText());
         double accuracy = parsePercentageValue(accuracyLabel.getText());
 
@@ -162,10 +176,11 @@ public class BlindPrintingController implements LayoutAware {
     private void resetTest() {
         running = false;
         activeLesson = null;
-        stopMetricsTimeline();
+        if (timeline != null) {
+            timeline.stop();
+        }
 
         startNanoTime = 0L;
-        completedSeconds = 0.0;
         targetTextArea.clear();
         inputArea.clear();
         inputArea.setDisable(true);
@@ -188,30 +203,17 @@ public class BlindPrintingController implements LayoutAware {
         }
     }
 
-    private void startMetricsTimeline() {
-        stopMetricsTimeline();
-        timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), e -> updateMetrics()));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-    }
-
-    private void stopMetricsTimeline() {
-        if (timeline != null) {
-            timeline.stop();
-            timeline = null;
-        }
-    }
-
     private void updateMetrics() {
-        double elapsedSeconds = calculateElapsedSeconds();
+        double elapsedSeconds = getElapsedSeconds();
         timerLabel.setText(formatElapsed(elapsedSeconds));
 
         String typed = inputArea.getText();
+        int charactersTyped = typed.length();
         double minutes = elapsedSeconds / 60.0;
-        double wpm = (!typed.isEmpty() && minutes > 0) ? (typed.length() / 5.0) / minutes : 0.0;
+        double wpm = minutes > 0 ? (charactersTyped / 5.0) / minutes : 0.0;
         wpmLabel.setText(String.format("%.1f WPM", wpm));
 
-        if (activeLesson != null && !typed.isEmpty()) {
+        if (activeLesson != null && !activeLesson.isEmpty()) {
             int matched = 0;
             int maxLength = Math.min(typed.length(), activeLesson.length());
             for (int i = 0; i < maxLength; i++) {
@@ -219,23 +221,23 @@ public class BlindPrintingController implements LayoutAware {
                     matched++;
                 }
             }
-            int typedLength = typed.length();
-            double accuracy = typedLength > 0 ? (double) matched / typedLength : 0.0;
+            int total = Math.max(activeLesson.length(), typed.length());
+            double accuracy = total > 0 ? (double) matched / total : 0.0;
             accuracyLabel.setText(String.format("%.1f%% точность", accuracy * 100));
         } else {
-            accuracyLabel.setText(String.format("%.1f%% точность", 0.0));
+            accuracyLabel.setText("0.0% точность");
         }
     }
 
-    private double calculateElapsedSeconds() {
-        if (running) {
-            return (System.nanoTime() - startNanoTime) / 1_000_000_000.0;
+    private double getElapsedSeconds() {
+        if (!running) {
+            return startNanoTime > 0 ? (System.nanoTime() - startNanoTime) / 1_000_000_000.0 : 0.0;
         }
-        return completedSeconds;
+        return (System.nanoTime() - startNanoTime) / 1_000_000_000.0;
     }
 
     private String formatElapsed(double elapsedSeconds) {
-        long totalSeconds = Math.max(0, (long) elapsedSeconds);
+        long totalSeconds = (long) elapsedSeconds;
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;
         return String.format("%02d:%02d", minutes, seconds);
@@ -246,14 +248,7 @@ public class BlindPrintingController implements LayoutAware {
             return 0.0;
         }
         String numeric = text.replaceAll("[^0-9.,]", "").replace(',', '.');
-        if (numeric.isEmpty()) {
-            return 0.0;
-        }
-        try {
-            return Double.parseDouble(numeric);
-        } catch (NumberFormatException ex) {
-            return 0.0;
-        }
+        return numeric.isEmpty() ? 0.0 : Double.parseDouble(numeric);
     }
 
     private double parsePercentageValue(String text) {
